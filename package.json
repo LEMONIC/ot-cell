@@ -1,0 +1,27 @@
+{
+  "name": "ot-cell",
+  "version": "1.0.0",
+  "description": "Mini Excel-like app to allow concurrent editing via OT",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LEMONIC/ot-cell.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LEMONIC/ot-cell/issues"
+  },
+  "homepage": "https://github.com/LEMONIC/ot-cell#readme",
+  "dependencies": {
+    "share": "<0.7.0",
+    "connect": "<3.0.0",
+    "browserchannel": "*"
+  }
+}

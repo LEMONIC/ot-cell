@@ -10,7 +10,7 @@ Mini Excel-like app to allow concurrent editing via OT(Operational transformatio
 
 ### Installing
 ```
-# npm install share@"<0.7.0" connect@"<3.0.0" browserchannel
+# npm install
 ```
 ### Running
 ```
