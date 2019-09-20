@@ -1,5 +1,4 @@
 import * as c from './Constant.js';
-import * as r from './RemoteEventHandler.js';
 
 export class DOMEventHandler {
     constructor(controller) {
@@ -118,8 +117,7 @@ export class DOMEventHandler {
     }
 
     _doAction(actionType, actionParam) {
-        r.actionGenerator(actionType, actionParam);
-        //this.controller.doAction(actionType, actionParam);
+        this.controller.doAction(actionType, actionParam);
     }
 
 
