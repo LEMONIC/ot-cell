@@ -117,7 +117,7 @@ export class DOMEventHandler {
     }
 
     _doAction(actionType, actionParam) {
-        this.controller.doAction(actionType, actionParam);
+        this.controller.doAction(actionType, actionParam, true);
     }
 
 

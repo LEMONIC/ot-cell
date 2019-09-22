@@ -10,7 +10,7 @@ export class Controller {
         this.action = new ActionGenerator();
     }
 
-    doAction(actionType, actionParam) {
+    doAction(actionType, actionParam, actionCreated) {
     	switch(actionType) {
             case c.UPDATE_VALUE :
                 this._updateValue(actionParam);
@@ -22,14 +22,16 @@ export class Controller {
                 
             case c.SHOW_MODEL_VALUE :
                 this._showSingleCellModelValue(actionParam);
-                break;
-
-            case 999 :
-                this._remoteUpdateColor(actionParam);
+                actionCreated = false;
                 break;
 
             default :
+                actionCreated = false;
                 break;
+        }
+
+        if (actionCreated === true) {
+            this.action.createAction(actionType, actionParam);
         }
     }
     
@@ -45,7 +47,6 @@ export class Controller {
 
     _updateColor(actionParam) {
         const viewData = this.model.setColor(actionParam);
-        this.action.createAction(1, actionParam);
         this.view.renderAll(viewData);
     }
 

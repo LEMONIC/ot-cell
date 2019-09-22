@@ -7,6 +7,6 @@ export class RemoteEventHandler {
     }
 
     _doAction(op) {
-        this.controller.doAction(999, op[0].oi);
+        this.controller.doAction(op[1].oi, op[0].oi, false);
     }
 }
