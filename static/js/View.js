@@ -46,5 +46,54 @@ export class View {
     
     renderSingleCellModelValue(modelValue) {
     	$('input').val(modelValue);
+    	$('#fx').text(modelValue);
+
+        $('[class*="range-"]').removeClass (function (index, className) {
+            return (className.match (/(^|\s)range-\S+/g) || []).join(' ');
+        });
+
+        if (String(modelValue).charAt(0) === "=") {
+            let str = modelValue.replace(/\s/gi, "").substring(1).toUpperCase();
+
+            if (str.includes("(") && str.includes(")") && str.includes(":")) {
+                const _a = str.substring(str.indexOf("(") + 1, str.indexOf(':'));
+                const a = {
+                    row: _a.substring(1, _a.length),
+                    col: _a.charAt(0).charCodeAt() - 64
+                };
+
+                const _b = str.substring(str.indexOf(':') + 1, str.indexOf(")"));
+                const b = {
+                    row: _b.substring(1, _b.length),
+                    col: _b.charAt(0).charCodeAt() - 64
+                };
+
+                for (let i = a.row; i <= b.row; i++) {
+                    for (let j = a.col; j <= b.col; j++) {
+                        if (i === a.row) {
+                            this.table.rows[i].cells[j].classList.add("range-top");
+                        }
+
+                        if (i === Number(b.row)) {
+                            //this.table.rows[i].cells[j].classList.add("range-bottom");
+                            this.table.rows[i].cells[j].classList.add("range-bottom");
+                        }
+
+                        if (j === a.col) {
+                            this.table.rows[i].cells[j].classList.add("range-left");
+                        }
+
+                        if (j === b.col) {
+                            this.table.rows[i].cells[j].classList.add("range-right");
+                        }
+                    }
+                }
+            } else {
+                const row = str.substring(1, str.length);
+                const col = str.charAt(0).charCodeAt()-64;
+
+                this.table.rows[row].cells[col].classList.add("range-all");
+            }
+        }
     }
 }

@@ -49,9 +49,4 @@ export class Controller {
         const viewData = this.model.setColor(actionParam);
         this.view.renderAll(viewData);
     }
-
-    _remoteUpdateColor(actionParam) {
-        const viewData = this.model.setColor(actionParam);
-        this.view.renderAll(viewData);
-    }
 }

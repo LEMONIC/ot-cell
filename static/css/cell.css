@@ -61,3 +61,66 @@ td:hover, input:hover {
 input:focus {
     background-color: #e6faff;
 }
+
+.cell-content {
+    border: 1px solid #e6e6e6;
+    background: #e6e6e6;
+    display: grid;
+    padding: 10px;
+    grid-template-columns: 50px auto;
+}
+
+.cell-content div {
+    border: 1px solid #cdcdcd;
+    background: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.cell-content div:nth-child(1) {
+    justify-content: center;
+    color: #999;
+    font: italic 700 18px "Merriweather", serif;
+    border-right: none;
+    height: 40px;
+}
+
+.cell-content div#fx {
+    padding-left: 6px;
+}
+
+.simplecolorpicker span.color {
+    font-family: none;
+}
+
+td.ui-selected {
+    opacity: 0.8;
+}
+
+td.selection {
+    border-color: #003eff;
+}
+
+/*      td[class*="range-"] {
+        border: 2px solid #003eff;
+      }*/
+
+td.range-top {
+    border-top: 2px solid #003eff;
+}
+
+td.range-left {
+    border-left: 2px solid #003eff;
+}
+
+td.range-right {
+    border-right: 2px solid #003eff;
+}
+
+td.range-bottom {
+    border-bottom: 2px solid #003eff;
+}
+
+td.range-all {
+    border: 2px solid #003eff;
+}

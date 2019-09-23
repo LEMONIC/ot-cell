@@ -7,7 +7,7 @@ export class DOMEventHandler {
     }
 
     _bindDOMEvent() {
-    	var that = this;
+    	const that = this;
     	document.querySelector('table').addEventListener('dblclick', function(e) { return that._showInputBox(e); });
         document.querySelector('table').addEventListener('mousedown', function(e) { return that._updateValue(e); });
         document.addEventListener('keyup', function(e) { return that._removeInputBox(e); });
@@ -55,11 +55,17 @@ export class DOMEventHandler {
                 value: input.value
             };
             actionParam.push(cellData);
-            
+
             this._doAction(c.UPDATE_VALUE, actionParam);
             input.remove();
         }
 
+        let cellData = {
+            row: event.target.parentNode.rowIndex,
+            col: event.target.cellIndex,
+        };
+
+        this.controller.doAction(c.SHOW_MODEL_VALUE, cellData);
         $('td').removeClass('ui-selected');
         event.target.classList.add('ui-selected');
     }
@@ -80,6 +86,12 @@ export class DOMEventHandler {
                     actionParam.push(cellData);
                 }
                 this._doAction(c.UPDATE_VALUE, actionParam);
+
+                $('[class*="range-"]').removeClass (function (index, className) {
+                    return (className.match (/(^|\s)range-\S+/g) || []).join(' ');
+                });
+
+                $('#fx').text('');
             }
         } else {
             if (event.key === "Enter") {
@@ -90,7 +102,9 @@ export class DOMEventHandler {
                     value: input.value
                 };
                 actionParam.push(cellData);
+
                 this._doAction(c.UPDATE_VALUE, actionParam);
+                this.controller.doAction(c.SHOW_MODEL_VALUE, cellData);
                 input.remove();
             }
         }
@@ -119,6 +133,4 @@ export class DOMEventHandler {
     _doAction(actionType, actionParam) {
         this.controller.doAction(actionType, actionParam, true);
     }
-
-
 }
