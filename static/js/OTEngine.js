@@ -1,7 +1,6 @@
 import * as r from './RemoteEventHandler.js';
 
-let $state;
-
+let $ops;
 export class OTEngine {
     constructor() {
         this.init();
@@ -9,31 +8,26 @@ export class OTEngine {
 
     init() {
         sharejs.open("ot", "json", function (error, doc) {
-            $state = doc;
             doc.on("change", function (op) {
-                if (op.length < 2) return;
-                new r.RemoteEventHandler()._doAction(op);
+                //if (op.length < 2) return;
+                //new r.RemoteEventHandler()._doAction(op);
+                //console.log(op);
             });
-
-            doc.submitOp([{
-                p: [],
-                od: null,
-                oi: {
-                    actionType: '',
-                    actionParam: null
-                }
+            if (doc.created) {
+                doc.submitOp([{
+                    p: [],
+                    od: null,
+                    oi: {
+                        cellData: null,
+                        ops:[]
+                    }
+                }]);
             }
-            ]);
+            $ops = doc.at('ops');
         });
     }
 
-    actionSender(actionType, actionParam) {
-        $state.submitOp([{
-            p: ['actionParam'],
-            oi: actionParam
-        }, {
-            p: ['actionType'],
-            oi: actionType
-        }]);
+    actionSender(action) {
+        $ops.insert(0, action);
     }
 }

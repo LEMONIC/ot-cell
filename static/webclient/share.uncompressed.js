@@ -1001,7 +1001,7 @@
         }
       })();
       this.socket.onmessage = function(msg) {
-          console.log(msg.data);
+          //console.log(msg.data);
         var docName;
         if (socketImpl === 'sockjs' || socketImpl === 'websocket') {
           msg = JSON.parse(msg.data);

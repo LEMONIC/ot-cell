@@ -267,6 +267,7 @@ var WEB = true;
   };
 
   json.transformComponent = function(dest, c, otherC, type) {
+    console.log("transformComponent")
     var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len;
 
     c = clone(c);
