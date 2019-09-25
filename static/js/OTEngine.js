@@ -9,9 +9,7 @@ export class OTEngine {
     init() {
         sharejs.open("ot", "json", function (error, doc) {
             doc.on("change", function (op) {
-                //if (op.length < 2) return;
-                //new r.RemoteEventHandler()._doAction(op);
-                //console.log(op);
+                new r.RemoteEventHandler().opToAction(op);
             });
             if (doc.created) {
                 doc.submitOp([{
