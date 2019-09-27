@@ -9,8 +9,8 @@ export class RemoteEventHandler {
     }
 
     opToAction(op) {
-        if (op[0].li === void 0) return;
-
+      console.log(op);
+      if (op[0].li !== undefined) {
         let ops = op[0].li;
         let actionType = c.UPDATE_COLOR;
         let actionParam = [];
@@ -60,5 +60,8 @@ export class RemoteEventHandler {
             }
         }
         this.controller.doAction(actionType, actionParam, false);
+      } else if (op[0].ld !== undefined) {
+        
+      }
     }
 }
