@@ -371,168 +371,199 @@ var WEB = true;
       //   }
       } else if (otherC.li !== void 0) {
         if (c.li !== void 0 && c.ld === void 0 && commonOperand && c.p[common] === otherC.p[common]) {
-            // HACK & TODO
+          if (type === 'right') {
+            //c.p[common]++;
+            /**
+             * [insert + insert]
+             * type=right를 반영하지 않도록 처리하여 type=left의 값으로 동기화한다.
+             */
+            if (c.li.cmd === "insert" && otherC.li.cmd === "insert") {
+              if ((c.li.pos[0] === otherC.li.pos[0]) && (c.li.pos[1] === otherC.li.pos[1])) {
+                console.log('insert -> insert');
+                c.ld = c.li;
+                delete c.li;
+              }
+            }
+            /**
+             * [insert + delete]
+             * insert를 반영하지 않도록 처리하여 delete로 동기화한다.
+             */
+            else if (c.li.cmd === "insert" && otherC.li.cmd === "delete") {
+              if (otherC.li.pos[3] === 0) {
+                if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
+                  console.log('insert -> delete');
+                  c.ld = c.li;
+                  delete c.li;
+                }
+              } // else if (cell range) { ... }
+            }
 
-          // if (type === 'right') {
-          //   c.p[common]++;
-          // }
+            else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
+              if (c.li.pos[3] === 0) {
+                if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
+                  console.log('delete -> insert');
+                }
+              } // else if (cell range) { ... }
+            }
+          }
         }
-        // else if (otherC.p[common] <= c.p[common]) {
-        //   c.p[common]++;
-        // }
-        // if (c.lm !== void 0) {
-        //   if (commonOperand) {
-        //     if (otherC.p[common] <= c.lm) {
-        //       c.lm++;
-        //     }
-        //   }
-        // }
-      // } else if (otherC.ld !== void 0) {
-      //   if (c.lm !== void 0) {
-      //     if (commonOperand) {
-      //       if (otherC.p[common] === c.p[common]) {
-      //         return dest;
-      //       }
-      //       p = otherC.p[common];
-      //       from = c.p[common];
-      //       to = c.lm;
-      //       if (p < to || (p === to && from < to)) {
-      //         c.lm--;
-      //       }
-      //     }
-      //   }
-      //   if (otherC.p[common] < c.p[common]) {
-      //     c.p[common]--;
-      //   } else if (otherC.p[common] === c.p[common]) {
-      //     if (otherCplength < cplength) {
-      //       return dest;
-      //     } else if (c.ld !== void 0) {
-      //       if (c.li !== void 0) {
-      //         delete c.ld;
-      //       } else {
-      //         return dest;
-      //       }
-      //     }
-      //   }
-      // } else if (otherC.lm !== void 0) {
-      //   if (c.lm !== void 0 && cplength === otherCplength) {
-      //     from = c.p[common];
-      //     to = c.lm;
-      //     otherFrom = otherC.p[common];
-      //     otherTo = otherC.lm;
-      //     if (otherFrom !== otherTo) {
-      //       if (from === otherFrom) {
-      //         if (type === 'left') {
-      //           c.p[common] = otherTo;
-      //           if (from === to) {
-      //             c.lm = otherTo;
-      //           }
-      //         } else {
-      //           return dest;
-      //         }
-      //       } else {
-      //         if (from > otherFrom) {
-      //           c.p[common]--;
-      //         }
-      //         if (from > otherTo) {
-      //           c.p[common]++;
-      //         } else if (from === otherTo) {
-      //           if (otherFrom > otherTo) {
-      //             c.p[common]++;
-      //             if (from === to) {
-      //               c.lm++;
-      //             }
-      //           }
-      //         }
-      //         if (to > otherFrom) {
-      //           c.lm--;
-      //         } else if (to === otherFrom) {
-      //           if (to > from) {
-      //             c.lm--;
-      //           }
-      //         }
-      //         if (to > otherTo) {
-      //           c.lm++;
-      //         } else if (to === otherTo) {
-      //           if ((otherTo > otherFrom && to > from) || (otherTo < otherFrom && to < from)) {
-      //             if (type === 'right') {
-      //               c.lm++;
-      //             }
-      //           } else {
-      //             if (to > from) {
-      //               c.lm++;
-      //             } else if (to === otherFrom) {
-      //               c.lm--;
-      //             }
-      //           }
-      //         }
-      //       }
-      //     }
-      //   } else if (c.li !== void 0 && c.ld === void 0 && commonOperand) {
-      //     from = otherC.p[common];
-      //     to = otherC.lm;
-      //     p = c.p[common];
-      //     if (p > from) {
-      //       c.p[common]--;
-      //     }
-      //     if (p > to) {
-      //       c.p[common]++;
-      //     }
-      //   } else {
-      //     from = otherC.p[common];
-      //     to = otherC.lm;
-      //     p = c.p[common];
-      //     if (p === from) {
-      //       c.p[common] = to;
-      //     } else {
-      //       if (p > from) {
-      //         c.p[common]--;
-      //       }
-      //       if (p > to) {
-      //         c.p[common]++;
-      //       } else if (p === to) {
-      //         if (from > to) {
-      //           c.p[common]++;
-      //         }
-      //       }
-      //     }
-      //   }
-      // } else if (otherC.oi !== void 0 && otherC.od !== void 0) {
-      //   if (c.p[common] === otherC.p[common]) {
-      //     if (c.oi !== void 0 && commonOperand) {
-      //       if (type === 'right') {
-      //         return dest;
-      //       } else {
-      //         c.od = otherC.oi;
-      //       }
-      //     } else {
-      //       return dest;
-      //     }
-      //   }
-      // } else if (otherC.oi !== void 0) {
-      //   if (c.oi !== void 0 && c.p[common] === otherC.p[common]) {
-      //     if (type === 'left') {
-      //       json.append(dest, {
-      //         p: c.p,
-      //         od: otherC.oi
-      //       });
-      //     } else {
-      //       return dest;
-      //     }
-      //   }
-      // } else if (otherC.od !== void 0) {
-      //   if (c.p[common] === otherC.p[common]) {
-      //     if (!commonOperand) {
-      //       return dest;
-      //     }
-      //     if (c.oi !== void 0) {
-      //       delete c.od;
-      //     } else {
-      //       return dest;
-      //     }
-      //   }
       }
+      // else if (otherC.p[common] <= c.p[common]) {
+      //   c.p[common]++;
+      // }
+      // if (c.lm !== void 0) {
+      //   if (commonOperand) {
+      //     if (otherC.p[common] <= c.lm) {
+      //       c.lm++;
+      //     }
+      //   }
+      // }
+    // } else if (otherC.ld !== void 0) {
+    //   if (c.lm !== void 0) {
+    //     if (commonOperand) {
+    //       if (otherC.p[common] === c.p[common]) {
+    //         return dest;
+    //       }
+    //       p = otherC.p[common];
+    //       from = c.p[common];
+    //       to = c.lm;
+    //       if (p < to || (p === to && from < to)) {
+    //         c.lm--;
+    //       }
+    //     }
+    //   }
+    //   if (otherC.p[common] < c.p[common]) {
+    //     c.p[common]--;
+    //   } else if (otherC.p[common] === c.p[common]) {
+    //     if (otherCplength < cplength) {
+    //       return dest;
+    //     } else if (c.ld !== void 0) {
+    //       if (c.li !== void 0) {
+    //         delete c.ld;
+    //       } else {
+    //         return dest;
+    //       }
+    //     }
+    //   }
+    // } else if (otherC.lm !== void 0) {
+    //   if (c.lm !== void 0 && cplength === otherCplength) {
+    //     from = c.p[common];
+    //     to = c.lm;
+    //     otherFrom = otherC.p[common];
+    //     otherTo = otherC.lm;
+    //     if (otherFrom !== otherTo) {
+    //       if (from === otherFrom) {
+    //         if (type === 'left') {
+    //           c.p[common] = otherTo;
+    //           if (from === to) {
+    //             c.lm = otherTo;
+    //           }
+    //         } else {
+    //           return dest;
+    //         }
+    //       } else {
+    //         if (from > otherFrom) {
+    //           c.p[common]--;
+    //         }
+    //         if (from > otherTo) {
+    //           c.p[common]++;
+    //         } else if (from === otherTo) {
+    //           if (otherFrom > otherTo) {
+    //             c.p[common]++;
+    //             if (from === to) {
+    //               c.lm++;
+    //             }
+    //           }
+    //         }
+    //         if (to > otherFrom) {
+    //           c.lm--;
+    //         } else if (to === otherFrom) {
+    //           if (to > from) {
+    //             c.lm--;
+    //           }
+    //         }
+    //         if (to > otherTo) {
+    //           c.lm++;
+    //         } else if (to === otherTo) {
+    //           if ((otherTo > otherFrom && to > from) || (otherTo < otherFrom && to < from)) {
+    //             if (type === 'right') {
+    //               c.lm++;
+    //             }
+    //           } else {
+    //             if (to > from) {
+    //               c.lm++;
+    //             } else if (to === otherFrom) {
+    //               c.lm--;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   } else if (c.li !== void 0 && c.ld === void 0 && commonOperand) {
+    //     from = otherC.p[common];
+    //     to = otherC.lm;
+    //     p = c.p[common];
+    //     if (p > from) {
+    //       c.p[common]--;
+    //     }
+    //     if (p > to) {
+    //       c.p[common]++;
+    //     }
+    //   } else {
+    //     from = otherC.p[common];
+    //     to = otherC.lm;
+    //     p = c.p[common];
+    //     if (p === from) {
+    //       c.p[common] = to;
+    //     } else {
+    //       if (p > from) {
+    //         c.p[common]--;
+    //       }
+    //       if (p > to) {
+    //         c.p[common]++;
+    //       } else if (p === to) {
+    //         if (from > to) {
+    //           c.p[common]++;
+    //         }
+    //       }
+    //     }
+    //   }
+    // } else if (otherC.oi !== void 0 && otherC.od !== void 0) {
+    //   if (c.p[common] === otherC.p[common]) {
+    //     if (c.oi !== void 0 && commonOperand) {
+    //       if (type === 'right') {
+    //         return dest;
+    //       } else {
+    //         c.od = otherC.oi;
+    //       }
+    //     } else {
+    //       return dest;
+    //     }
+    //   }
+    // } else if (otherC.oi !== void 0) {
+    //   if (c.oi !== void 0 && c.p[common] === otherC.p[common]) {
+    //     if (type === 'left') {
+    //       json.append(dest, {
+    //         p: c.p,
+    //         od: otherC.oi
+    //       });
+    //     } else {
+    //       return dest;
+    //     }
+    //   }
+    // } else if (otherC.od !== void 0) {
+    //   if (c.p[common] === otherC.p[common]) {
+    //     if (!commonOperand) {
+    //       return dest;
+    //     }
+    //     if (c.oi !== void 0) {
+    //       delete c.od;
+    //     } else {
+    //       return dest;
+    //     }
+    //   }
     }
+
     json.append(dest, c);
     return dest;
   };
