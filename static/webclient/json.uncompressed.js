@@ -267,6 +267,7 @@ var WEB = true;
   };
 
   json.transformComponent = function(dest, c, otherC, type) {
+    console.log(c)
     var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len;
 
     c = clone(c);
@@ -375,58 +376,80 @@ var WEB = true;
           if (type === 'right') {
             //c.p[common]++;
             /**
-             * [insert + insert]
-             * type=left의 값으로 동기화한다.
+             * [insert -> insert]
+             * 전달받은 insert를 반영하지 않도록 처리
              */
             if (c.li.cmd === "insert" && otherC.li.cmd === "insert") {
               if ((c.li.pos[0] === otherC.li.pos[0]) && (c.li.pos[1] === otherC.li.pos[1])) {
-                console.log('insert -> insert');
-                // c.li.value = otherC.li.value; // right.value = left.value ? nOp
+                console.log('>> insert -> insert');
                 c.ld = c.li;
                 delete c.li;
               }
             }
             /**
-             * [insert + delete]
-             * insert를 반영하지 않도록 처리하여 delete로 동기화한다.
+             * [insert -> delete]
+             * 전달받은 insert를 반영하지 않도록 처리
              */
             else if (c.li.cmd === "insert" && otherC.li.cmd === "delete") {
               if (otherC.li.pos[3] === 0) {
                 if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
-                  console.log('●●● insert -> delete');
-                  //console.log(dest[0])
+                  console.log('>> insert -> delete');
                   c.ld = c.li;
                   delete c.li;
                 }
-              } // else if (cell range) { ... }
+              } else {
+                if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2]) 
+                && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
+                  console.log('>> insert -> delete');
+                  c.ld = c.li;
+                  delete c.li;
+                }
+              }
             }
-
-            // else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
-            //   if (c.li.pos[3] === 0) {
-            //     if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
-            //       console.log('○○○ delete -> insert');
-            //       dest.pop();
-            //       dest.push(otherC);
-            //       return dest;
-            //     }
-            //   } // else if (cell range) { ... }
-            // }
-
-          }
-
-
-           else if (type === "left") {
-            if (c.li.cmd === "insert" && otherC.li.cmd === "delete") {
+            /**
+             * [delete -> insert]
+             * 먼저 delete를 반영한 후, insert를 다시 반영하도록 처리
+             */
+            else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
+              if (c.li.pos[3] === 0) {
+                if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
+                  console.log('>> delete -> insert');
+                  c.ld = c.li;
+                  c.li = otherC.li;
+                }
+              } else {
+                if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
+                && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
+                  console.log('>> delete -> insert');
+                  c.ld = c.li;
+                  c.li = otherC.li;
+                }
+              }
+            }
+            /**
+             *  [update -> update]
+             *  겹치는 범위에 대한 처리 로직 수정 필요
+             */
+            else if (c.li.cmd === "update" && otherC.li.cmd === "update") {
               if (otherC.li.pos[3] === 0) {
                 if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
-                  console.log('○○○ delete -> insert');
-                  c = clone(otherC);
+                  console.log('>> update -> update');
+                  c.ld = c.li;
+                  c.li = otherC.li;
                 }
-              } // else if (cell range) { ... }
+              } else if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2])
+              && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
+                console.log('>> update -> update');
+                c.ld = c.li;
+                c.li = otherC.li;
+              } else if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
+              && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
+                console.log('>> update -> update');
+                c.ld = c.li;
+                c.li = otherC.li;
+              }
             }
-          }
-
-
+          } // if (type === 'right') {
         } else if (otherC.p[common] <= c.p[common]) {
           c.p[common]++;
         }
