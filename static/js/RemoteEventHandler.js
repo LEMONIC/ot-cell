@@ -9,7 +9,6 @@ export class RemoteEventHandler {
     }
 
     opToAction(op) {
-        //console.log(op);
         let ops, actionType, actionParam, cellData;
 
         if (op[0].ld !== undefined) {

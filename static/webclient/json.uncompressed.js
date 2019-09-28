@@ -267,7 +267,6 @@ var WEB = true;
   };
 
   json.transformComponent = function(dest, c, otherC, type) {
-    console.log(c)
     var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len;
 
     c = clone(c);
@@ -408,7 +407,7 @@ var WEB = true;
             }
             /**
              * [delete -> insert]
-             * 먼저 delete를 반영한 후, insert를 다시 반영하도록 처리
+             * remote에게 전달받은 delete를 먼저 반영한 후에, local insert를 재반영 하도록 처리
              */
             else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
               if (c.li.pos[3] === 0) {
@@ -428,25 +427,27 @@ var WEB = true;
             }
             /**
              *  [update -> update]
-             *  겹치는 범위에 대한 처리 로직 수정 필요
+             *  remote에게 전달받은 update를 먼저 반영한 후에, local update를 재반영 하도록 처리
              */
             else if (c.li.cmd === "update" && otherC.li.cmd === "update") {
-              if (otherC.li.pos[3] === 0) {
-                if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
+              if (c.li.pos[3] === 0) {
+                if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
                   console.log('>> update -> update');
                   c.ld = c.li;
                   c.li = otherC.li;
                 }
-              } else if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2])
-              && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
-                console.log('>> update -> update');
-                c.ld = c.li;
-                c.li = otherC.li;
-              } else if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
-              && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
-                console.log('>> update -> update');
-                c.ld = c.li;
-                c.li = otherC.li;
+              } else {
+                if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2])
+                && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
+                  console.log('>> update -> update');
+                  c.ld = c.li;
+                  c.li = otherC.li;
+                } else if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2])
+                && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
+                  console.log('>> update -> update');
+                  c.ld = c.li;
+                  c.li = otherC.li;
+                }
               }
             }
           } // if (type === 'right') {
