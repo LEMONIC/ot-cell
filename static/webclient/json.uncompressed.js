@@ -267,7 +267,7 @@ var WEB = true;
   };
 
   json.transformComponent = function(dest, c, otherC, type) {
-    var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len;
+    var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len, val;
 
     c = clone(c);
     if (c.na !== void 0) {
@@ -404,7 +404,7 @@ var WEB = true;
             }
             /**
              * [delete -> insert]
-             * remote에게 전달받은 delete를 먼저 반영한 후에, local insert를 재반영 하도록 처리
+             * 겹치는 부분에는 local insert를 유지하면서 그 외의 영역에는 remote delete를 반영하도록 처리
              */
             else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
               if (c.li.pos[3] === 0) {
@@ -416,23 +416,25 @@ var WEB = true;
                 if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
                 && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
                   console.log('>> delete -> insert');
-                  c.li.value = {
-                    o: [otherC.li.pos[0], otherC.li.pos[1]],
+                  val = {
+                    row: otherC.li.pos[0],
+                    col: otherC.li.pos[1],
                     value: otherC.li.value
                   };
+                  c.li.value = [];
+                  c.li.value.push(val);
                 }
               }
             }
             /**
              *  [update -> update]
-             *  remote에게 전달받은 update를 먼저 반영한 후에, local update를 재반영 하도록 처리
+             * 겹치는 부분에는 local update를 유지하면서 그 외의 영역에는 remote update를 반영하도록 처리
              */
             else if (c.li.cmd === "update" && otherC.li.cmd === "update") {
               if (c.li.pos[3] === 0) {
                 if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
                   console.log('>> update -> update');
-                  c.ld = c.li;
-                  c.li = otherC.li;
+                  c.li.cmd = "noop";
                 }
               } else {
                 if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2])
