@@ -376,32 +376,29 @@ var WEB = true;
             //c.p[common]++;
             /**
              * [insert -> insert]
-             * 전달받은 insert를 반영하지 않도록 처리
+             * remote insert를 반영하지 않도록 처리
              */
             if (c.li.cmd === "insert" && otherC.li.cmd === "insert") {
               if ((c.li.pos[0] === otherC.li.pos[0]) && (c.li.pos[1] === otherC.li.pos[1])) {
                 console.log('>> insert -> insert');
-                c.ld = c.li;
-                delete c.li;
+                c.li.cmd = "noop";
               }
             }
             /**
              * [insert -> delete]
-             * 전달받은 insert를 반영하지 않도록 처리
+             * remote insert를 반영하지 않도록 처리
              */
             else if (c.li.cmd === "insert" && otherC.li.cmd === "delete") {
               if (otherC.li.pos[3] === 0) {
                 if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
                   console.log('>> insert -> delete');
-                  c.ld = c.li;
-                  delete c.li;
+                  c.li.cmd = "noop";
                 }
               } else {
                 if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2]) 
                 && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
                   console.log('>> insert -> delete');
-                  c.ld = c.li;
-                  delete c.li;
+                  c.li.cmd = "noop";
                 }
               }
             }
@@ -413,15 +410,16 @@ var WEB = true;
               if (c.li.pos[3] === 0) {
                 if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
                   console.log('>> delete -> insert');
-                  c.ld = c.li;
-                  c.li = otherC.li;
+                  c.li.cmd = "noop";
                 }
               } else {
                 if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
                 && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
                   console.log('>> delete -> insert');
-                  c.ld = c.li;
-                  c.li = otherC.li;
+                  c.li.value = {
+                    o: [otherC.li.pos[0], otherC.li.pos[1]],
+                    value: otherC.li.value
+                  };
                 }
               }
             }
