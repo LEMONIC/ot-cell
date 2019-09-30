@@ -58,14 +58,14 @@ export class View {
             if (str.includes("(") && str.includes(")") && str.includes(":")) {
                 const _a = str.substring(str.indexOf("(") + 1, str.indexOf(':'));
                 const a = {
-                    row: _a.substring(1, _a.length),
-                    col: _a.charAt(0).charCodeAt() - 64
+                    row: Number(_a.substring(1, _a.length)),
+                    col: Number(_a.charAt(0).charCodeAt() - 64)
                 };
 
                 const _b = str.substring(str.indexOf(':') + 1, str.indexOf(")"));
                 const b = {
-                    row: _b.substring(1, _b.length),
-                    col: _b.charAt(0).charCodeAt() - 64
+                    row: Number(_b.substring(1, _b.length)),
+                    col: Number(_b.charAt(0).charCodeAt() - 64)
                 };
 
                 for (let i = a.row; i <= b.row; i++) {
@@ -74,8 +74,7 @@ export class View {
                             this.table.rows[i].cells[j].classList.add("range-top");
                         }
 
-                        if (i === Number(b.row)) {
-                            //this.table.rows[i].cells[j].classList.add("range-bottom");
+                        if (i === b.row) {
                             this.table.rows[i].cells[j].classList.add("range-bottom");
                         }
 
