@@ -40,7 +40,20 @@ export class ReCalEngine {
 									break;
 	
 								case "AVERAGE" :
-									viewData[i][j].value = arr.reduce((accumulator, currentValue) => accumulator + currentValue);
+									// viewData[i][j].value = arr.reduce((accumulator, currentValue) => accumulator + currentValue) / arr.length;
+									let _sum = 0;
+									let _count = 0;
+									for (let k = 0; k < arr.length; k++) {
+										if (arr[k] === 0) {
+											continue;
+										} else if (isNaN(arr[k])) {
+											_sum = "NaN";
+											break;
+										}
+										_sum += arr[k];
+										_count++;
+									}
+									viewData[i][j].value = _sum / _count;
 									break;
 	
 								case "MIN" :
@@ -52,7 +65,7 @@ export class ReCalEngine {
 									break;
 	
 								default :
-									viewData[i][j].value = '#NAME?';
+									viewData[i][j].value = "#NAME?";
 									break;
 							}
 						}

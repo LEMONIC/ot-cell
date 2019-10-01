@@ -22,8 +22,6 @@ describe("ReCalEngine", function() {
         viewData[2][2].value = 5;
         viewData[2][3].value = 6;
 
-        console.log(viewData)
-
         r.doReCal(viewData);
     });
 
@@ -32,8 +30,7 @@ describe("ReCalEngine", function() {
     });
 
     it("average", function() {
-        //expect(viewData[10][2]).toEqual({ value: 3.5, color: '' });
-        expect(viewData[10][2]).toEqual({ value: 21, color: '' });
+        expect(viewData[10][2]).toEqual({ value: 3.5, color: '' });
     });
 
     it("min", function() {
