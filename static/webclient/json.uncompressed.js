@@ -267,7 +267,7 @@ var WEB = true;
   };
 
   json.transformComponent = function(dest, c, otherC, type) {
-    var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len, val;
+    var common, common2, commonOperand, convert, cplength, from, jc, oc, otherCplength, otherFrom, otherTo, p, res, tc, tc1, tc2, to, _i, _len, _val, _color;
 
     c = clone(c);
     if (c.na !== void 0) {
@@ -416,13 +416,8 @@ var WEB = true;
                 if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
                 && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
                   console.log('>> delete -> insert');
-                  val = {
-                    row: otherC.li.pos[0],
-                    col: otherC.li.pos[1],
-                    value: otherC.li.value
-                  };
                   c.li.value = [];
-                  c.li.value.push(val);
+                  c.li.value.push({ row: otherC.li.pos[0], col: otherC.li.pos[1], value: otherC.li.value });
                 }
               }
             }
@@ -431,22 +426,31 @@ var WEB = true;
              * 겹치는 부분에는 local update를 유지하면서 그 외의 영역에는 remote update를 반영하도록 처리
              */
             else if (c.li.cmd === "update" && otherC.li.cmd === "update") {
-              if (c.li.pos[3] === 0) {
-                if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
+              if (c.li.pos[3] === 0 && otherC.li.pos[3] === 0) {
+                if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
                   console.log('>> update -> update');
                   c.li.cmd = "noop";
                 }
               } else {
-                if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2])
-                && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
-                  console.log('>> update -> update');
-                  c.ld = c.li;
-                  c.li = otherC.li;
-                } else if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2])
-                && (otherC.li.pos[1] >= c.li.pos[1] && otherC.li.pos[1] <= c.li.pos[3])) {
-                  console.log('>> update -> update');
-                  c.ld = c.li;
-                  c.li = otherC.li;
+                console.log('>> update -> update');
+                _color = c.li.value;
+                _val = {};
+                c.li.value = [];
+                for (let i = c.li.pos[0]; i <= c.li.pos[2]; i++) {
+                  for (let j = c.li.pos[1]; j <= c.li.pos[3]; j++) {
+                    _val.value = _color;
+                    for (let k = otherC.li.pos[0]; k <= otherC.li.pos[2]; k++) {
+                      for (let l = otherC.li.pos[1]; l <= otherC.li.pos[3]; l++) {
+                        if (i === k && j === l) {
+                          _val.value = otherC.li.value;
+                        }
+                      }
+                    }
+                    _val.row = i;
+                    _val.col = j;
+                    c.li.value.push(_val);
+                    _val = {};
+                  }
                 }
               }
             }
