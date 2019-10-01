@@ -1,10 +1,8 @@
-import { OTEngine } from './OTEngine.js';
+import OTEngine from './OTEngine.js';
 import * as c from './Constant.js';
 
 export class ActionGenerator {
-    constructor() {
-        this.ot = new OTEngine();
-    }
+    constructor() { }
 
     createAction(actionType, actionParam) {
         let action = {
@@ -44,6 +42,6 @@ export class ActionGenerator {
             action.pos.push(actionParam[actionParam.length-1].row);
             action.pos.push(actionParam[actionParam.length-1].col);
         }
-        this.ot.actionSender(action);
+        OTEngine.actionSender(action);
     }
 }
