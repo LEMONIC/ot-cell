@@ -1,4 +1,4 @@
-import OTEngine from './OTEngine.js';
+import { ot } from './OTEngine.js';
 import * as c from "./Constant.js";
 
 
@@ -6,7 +6,7 @@ export class RemoteEventHandler {
     constructor(controller) {
         this.controller = controller;
         this.opToAction;
-        OTEngine.addOnChangeCallBack(this, this.opToAction);
+        ot.addOnChangeCallBack(this, this.opToAction);
     }
 
     opToAction(op) {

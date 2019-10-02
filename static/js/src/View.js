@@ -36,12 +36,17 @@ export class View {
     }
     
     renderAll(viewData) {
+        let _fxText = "";
         for (let i = 1; i <= c.MAX_ROW; i++) {
             for (let j = 1; j <= c.MAX_COL; j++) {
         		this.table.rows[i].cells[j].innerText = viewData[i][j].value;
         		this.table.rows[i].cells[j].style.background = viewData[i][j].color;
+                if (this.table.rows[i].cells[j].classList.contains('ui-selected')) {
+                    _fxText = viewData[i][j].value;
+                }
             }
         }
+        $('#fx').text(_fxText);
 	}
     
     renderSingleCellModelValue(modelValue) {

@@ -1,4 +1,4 @@
-import OTEngine from './OTEngine.js';
+import { ot } from './OTEngine.js';
 import * as c from './Constant.js';
 
 export class ActionGenerator {
@@ -42,6 +42,6 @@ export class ActionGenerator {
             action.pos.push(actionParam[actionParam.length-1].row);
             action.pos.push(actionParam[actionParam.length-1].col);
         }
-        OTEngine.actionSender(action);
+        ot.actionSender(action);
     }
 }

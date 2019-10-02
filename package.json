@@ -2,9 +2,9 @@
   "name": "ot-cell",
   "version": "1.0.0",
   "description": "Mini Excel-like app to allow Real-time collaboration editing via OT",
-  "main": "sharejsRunner.js",
+  "main": "serverRunner.js",
   "scripts": {
-    "start": "node sharejsRunner.js",
+    "start": "node serverRunner.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

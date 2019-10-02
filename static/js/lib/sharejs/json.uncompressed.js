@@ -455,6 +455,9 @@ var WEB = true;
               }
             }
           } // if (type === 'right') {
+          /**
+           * end
+           */
         } else if (otherC.p[common] <= c.p[common]) {
           c.p[common]++;
         }

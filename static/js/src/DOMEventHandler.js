@@ -23,7 +23,20 @@ export class DOMEventHandler {
             return;
         }
 
-        const input = event.target.appendChild(document.createElement('input'));
+        const input = document.body.appendChild(document.createElement('input'));
+        const tdRect = event.target.getBoundingClientRect();
+
+        $('input').css({
+            position: "absolute",
+            bottom: tdRect.bottom,
+            height: tdRect.height,
+            left: tdRect.left,
+            right: tdRect.right,
+            top: tdRect.top,
+            width: tdRect.width,
+            x: tdRect.x,
+            y: tdRect.y
+        });
 
         let cellData = {
             row: event.target.parentNode.rowIndex,
@@ -31,9 +44,8 @@ export class DOMEventHandler {
         };
 
         this.controller.doAction(c.SHOW_MODEL_VALUE, cellData);
+        input.id = cellData.row + "," + cellData.col;
         input.focus();
-
-        event.target.firstChild.nodeValue = "";
     }
 
     _updateValue(event) {
@@ -49,9 +61,10 @@ export class DOMEventHandler {
 
         if (input != null) {
             let actionParam = [];
+            let cellIndex = input.id.split(",");
             let cellData = {
-                row: input.parentNode.parentNode.rowIndex,
-                col: input.parentNode.cellIndex,
+                row: Number(cellIndex[0]),
+                col: Number(cellIndex[1]),
                 value: input.value
             };
             actionParam.push(cellData);
@@ -96,9 +109,10 @@ export class DOMEventHandler {
         } else {
             if (event.key === "Enter") {
                 let actionParam = [];
+                let cellIndex = input.id.split(",");
                 let cellData = {
-                    row: input.parentNode.parentNode.rowIndex,
-                    col: input.parentNode.cellIndex,
+                    row: Number(cellIndex[0]),
+                    col: Number(cellIndex[1]),
                     value: input.value
                 };
                 actionParam.push(cellData);

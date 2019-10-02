@@ -1,6 +1,5 @@
 class OTEngine {
     constructor() {
-        // this.onChangeCallBack = null;
         let that = this;
         sharejs.open("ot", "json", function (error, doc) {
             doc.on("change", function(op) { return that.documentOnChange(op); });
@@ -29,4 +28,4 @@ class OTEngine {
         }
     }
 }
-export default new OTEngine();
+export const ot = new OTEngine();

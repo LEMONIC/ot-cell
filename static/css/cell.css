@@ -47,12 +47,12 @@ div.ui-selectable-helper {
     border-color: #454545;
 }
 
-input {
+/*input {
     border: 0;
     width: 100%;
     margin: -8px -8px -8px 0px;
     padding: 10px 8px 8px 8px;
-}
+}*/
 
 td:hover, input:hover {
     background-color: #eee;
