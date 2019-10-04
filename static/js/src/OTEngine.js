@@ -1,8 +1,10 @@
 class OTEngine {
     constructor() {
         let that = this;
-        sharejs.open("ot", "json", function (error, doc) {
-            doc.on("change", function(op) { return that.documentOnChange(op); });
+        sharejs.open('ot', 'json', function (error, doc) {
+            doc.on('change', function (op) {
+                return that._documentOnChange(op);
+            });
             if (doc.created) {
                 doc.submitOp([{p: [], oi: {ops: []}}]);
             }
@@ -14,18 +16,19 @@ class OTEngine {
         this.ops.insert(0, action);
     }
 
-    documentOnChange(op) {
-        if(this.onChangeCallBack) {
-            this.onChangeCallBack(op);
+    _documentOnChange(op) {
+        if (this._onChangeCallBack) {
+            this._onChangeCallBack(op);
         } else {
-            console.error("onChangeCallBack function을 등록하세요.");
+            console.error('onChangeCallBack function을 등록하세요.');
         }
     }
 
     addOnChangeCallBack(context, callBackFunction) {
-        this.onChangeCallBack = function(op) {
+        this._onChangeCallBack = function (op) {
             callBackFunction.call(context, op);
         }
     }
 }
+
 export const ot = new OTEngine();

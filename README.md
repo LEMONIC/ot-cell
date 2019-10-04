@@ -1,6 +1,6 @@
 # ot-cell
 
-Mini Excel-like app to allow concurrent editing via OT(Operational transformation)
+Mini Excel-like app to allow Real-time collaboration editing via OT(Operational transformation)
 
 ## Getting Started
 
@@ -14,17 +14,17 @@ Mini Excel-like app to allow concurrent editing via OT(Operational transformatio
 ```
 ### Running
 ```
-# node ./lib/index.js
+# npm start
 ```
 http://localhost:5000 (default port)
 
 ### To change the port number
 ```javascript
-// ./lib/index.js
+// serverRunner.js
 ...
 ShareJS.attach(server, ShareJSOpts);
 
-port = 5000; // Todo
+port = 5000; // TODO
 
 server.listen(port, function() {
 ...

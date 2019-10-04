@@ -1,7 +1,7 @@
-import { Model } from './Model.js';
-import { View } from './View.js';
-import { ActionGenerator } from './ActionGenerator.js';
-import * as c from './Constant.js';
+import {Model} from './Model.js';
+import {View} from './View.js';
+import {ActionGenerator} from './ActionGenerator.js';
+import Consts from './Constants.js';
 
 export class Controller {
     constructor() {
@@ -10,43 +10,54 @@ export class Controller {
         this.action = new ActionGenerator();
     }
 
-    doAction(actionType, actionParam, actionCreated) {
-    	switch(actionType) {
-            case c.UPDATE_VALUE :
+    doAction(actionType, actionParam) {
+        switch (actionType) {
+            case Consts.UPDATE_VALUE :
                 this._updateValue(actionParam);
                 break;
 
-            case c.UPDATE_COLOR :
+            case Consts.UPDATE_COLOR :
                 this._updateColor(actionParam);
                 break;
-                
-            case c.SHOW_MODEL_VALUE :
+
+            case Consts.SHOW_MODEL_VALUE :
                 this._showSingleCellModelValue(actionParam);
-                actionCreated = false;
                 break;
 
-            default :
-                actionCreated = false;
+            case Consts.UPDATE_VALUE_WITH_ACTION :
+                this._updateValueWithAction(actionType, actionParam);
                 break;
-        }
 
-        if (actionCreated === true) {
-            this.action.createAction(actionType, actionParam);
+            case Consts.UPDATE_COLOR_WITH_ACTION :
+                this._updateColorWithAction(actionType, actionParam);
+                break;
         }
     }
-    
+
     _showSingleCellModelValue(cellOffset) {
-        const singleCellmodelValue = this.model.getValue(cellOffset);
-        this.view.renderSingleCellModelValue(singleCellmodelValue);
+        const singleCellModelValue = this.model.getValue(cellOffset);
+        this.view.renderSingleCellModelValue(singleCellModelValue);
     }
 
     _updateValue(actionParam) {
-        const viewData = this.model.setValue(actionParam);
+        const viewData = this.model.updateValue(actionParam);
         this.view.renderAll(viewData);
     }
 
     _updateColor(actionParam) {
-        const viewData = this.model.setColor(actionParam);
+        const viewData = this.model.updateColor(actionParam);
+        this.view.renderAll(viewData);
+    }
+
+    _updateValueWithAction(actionType, actionParam) {
+        const viewData = this.model.updateValue(actionParam);
+        this.action.createAction(actionType, actionParam);
+        this.view.renderAll(viewData);
+    }
+
+    _updateColorWithAction(actionType, actionParam) {
+        const viewData = this.model.updateColor(actionParam);
+        this.action.createAction(actionType, actionParam);
         this.view.renderAll(viewData);
     }
 }

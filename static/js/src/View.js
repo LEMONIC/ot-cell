@@ -1,102 +1,100 @@
-import * as c from './Constant.js';
+import Consts from './Constants.js';
+import Utils from "./Utils.js";
 
 export class View {
     constructor() {
-    	this._initTableRender();
-    	this._initColorPicker();
-    	this._selectableTable();
+        this._initTableRender();
+        this._initColorPicker();
+        this._initSelectable();
     }
-    
+
     _initTableRender() {
         this.table = document.querySelector('table');
 
-        for (let i = 0; i <= c.MAX_ROW; i++) {
+        for (let i = 0; i < Consts.MAX_ROW; i++) {
             let tr = this.table.insertRow();
-            tr.id = "row" + i;
+            tr.id = 'row' + i;
 
-            for (let j = 0; j <= c.MAX_COL; j++) {
+            for (let j = 0; j < Consts.MAX_COL; j++) {
                 let td = this.table.querySelectorAll('tr')[i].insertCell();
                 td.id = String.fromCharCode('@'.charCodeAt(0) + j) + i;
 
-                if (i == 0) {
+                if (i === 0) {
                     td.appendChild(document.createTextNode(String.fromCharCode('@'.charCodeAt(0) + j)));
-                } else if (j == 0) {
-                    td.appendChild(document.createTextNode(i));
+                } else if (j === 0) {
+                    td.appendChild(document.createTextNode(String(i)));
                 }
             }
         }
     }
-    
-    _selectableTable() {
-    	$('table').selectable({distance: 1});
-    }
-    
-    _initColorPicker() {
-    	$('select[name="colorpicker"]').simplecolorpicker();
-    }
-    
-    renderAll(viewData) {
-        let _fxText = "";
-        for (let i = 1; i <= c.MAX_ROW; i++) {
-            for (let j = 1; j <= c.MAX_COL; j++) {
-        		this.table.rows[i].cells[j].innerText = viewData[i][j].value;
-        		this.table.rows[i].cells[j].style.background = viewData[i][j].color;
-                if (this.table.rows[i].cells[j].classList.contains('ui-selected')) {
-                    _fxText = viewData[i][j].value;
-                }
-            }
-        }
-        $('#fx').text(_fxText);
-	}
-    
-    renderSingleCellModelValue(modelValue) {
-    	$('input').val(modelValue);
-    	$('#fx').text(modelValue);
 
-        $('[class*="range-"]').removeClass (function (index, className) {
-            return (className.match (/(^|\s)range-\S+/g) || []).join(' ');
+    _initSelectable() {
+        $('table').selectable({distance: 1});
+    }
+
+    _initColorPicker() {
+        $('select[name="colorpicker"]').simplecolorpicker();
+    }
+
+    renderAll(viewData) {
+        let fxText = '',
+            domColIndex,
+            domRowIndex;
+        for (let i = 0; i < Consts.MAX_ROW - 1; i++) {
+            domRowIndex = i + 1;
+            for (let j = 0; j < Consts.MAX_COL - 1; j++) {
+                domColIndex = j + 1;
+                this.table.rows[domRowIndex].cells[domColIndex].innerText = viewData[i][j].value;
+                this.table.rows[domRowIndex].cells[domColIndex].style.background = viewData[i][j].color;
+                if (this.table.rows[domRowIndex].cells[domColIndex].classList.contains('ui-selected')) {
+                    fxText = viewData[i][j].value;
+                }
+            }
+        }
+        $('#fx').text(fxText);
+    }
+
+    renderSingleCellModelValue(modelValue) {
+        $('input').val(modelValue);
+        $('#fx').text(modelValue);
+
+        $('[class*="range-"]').removeClass(function (index, className) {
+            return (className.match(/(^|\s)range-\S+/g) || []).join(' ');
         });
 
-        if (String(modelValue).charAt(0) === "=") {
-            let str = modelValue.replace(/\s/gi, "").substring(1).toUpperCase();
+        if (Utils.isFormula(modelValue)) {
+            let str = Utils.getFormulaStringForReCal(modelValue),
+                cellInfo,
+                domColIndex,
+                domRowIndex;
 
-            if (str.includes("(") && str.includes(")") && str.includes(":")) {
-                const _a = str.substring(str.indexOf("(") + 1, str.indexOf(':'));
-                const a = {
-                    row: Number(_a.substring(1, _a.length)),
-                    col: Number(_a.charAt(0).charCodeAt() - 64)
-                };
+            if (Utils.isFunction(str)) {
+                cellInfo = Utils.getFunctionData(str);
 
-                const _b = str.substring(str.indexOf(':') + 1, str.indexOf(")"));
-                const b = {
-                    row: Number(_b.substring(1, _b.length)),
-                    col: Number(_b.charAt(0).charCodeAt() - 64)
-                };
-
-                for (let i = a.row; i <= b.row; i++) {
-                    for (let j = a.col; j <= b.col; j++) {
-                        if (i === a.row) {
-                            this.table.rows[i].cells[j].classList.add("range-top");
+                for (let i = cellInfo.startCell.row; i <= cellInfo.endCell.row; i++) {
+                    domRowIndex = i + 1;
+                    for (let j = cellInfo.startCell.col; j <= cellInfo.endCell.col; j++) {
+                        domColIndex = j + 1;
+                        if (i === cellInfo.startCell.row) {
+                            this.table.rows[domRowIndex].cells[domColIndex].classList.add('range-top');
                         }
 
-                        if (i === b.row) {
-                            this.table.rows[i].cells[j].classList.add("range-bottom");
+                        if (i === cellInfo.endCell.row) {
+                            this.table.rows[domRowIndex].cells[domColIndex].classList.add('range-bottom');
                         }
 
-                        if (j === a.col) {
-                            this.table.rows[i].cells[j].classList.add("range-left");
+                        if (j === cellInfo.startCell.col) {
+                            this.table.rows[domRowIndex].cells[domColIndex].classList.add('range-left');
                         }
 
-                        if (j === b.col) {
-                            this.table.rows[i].cells[j].classList.add("range-right");
+                        if (j === cellInfo.endCell.col) {
+                            this.table.rows[domRowIndex].cells[domColIndex].classList.add('range-right');
                         }
                     }
                 }
             } else {
-                const row = str.substring(1, str.length);
-                const col = str.charAt(0).charCodeAt()-64;
-
-                this.table.rows[row].cells[col].classList.add("range-all");
+                cellInfo = Utils.getRowColOffset(str);
+                this.table.rows[cellInfo.row + 1].cells[cellInfo.col + 1].classList.add('range-all');
             }
         }
     }

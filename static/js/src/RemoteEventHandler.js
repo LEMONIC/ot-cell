@@ -1,5 +1,5 @@
-import { ot } from './OTEngine.js';
-import * as c from "./Constant.js";
+import {ot} from './OTEngine.js';
+import Consts from './Constants.js';
 
 
 export class RemoteEventHandler {
@@ -10,51 +10,53 @@ export class RemoteEventHandler {
     }
 
     opToAction(op) {
-        let ops, actionType, actionParam, cellData, val;
-
         if (op[0].li !== undefined) {
-            ops = op[0].li;
-            actionType = "";
-            actionParam = [];
-            cellData = {};
-            val = "";
+            let ops = op[0].li,
+                actionType = '',
+                actionParam = [],
+                cellData = {},
+                val = '',
+                startRowIndex = ops.pos[0],
+                startColIndex = ops.pos[1],
+                endRowIndex = ops.pos[2],
+                endColIndex = ops.pos[3];
 
-            if (ops.cmd !== "noop") {
-                if (Array.isArray(ops.value) === true) {
-                    for (let i = ops.pos[0]; i <= ops.pos[2]; i++) {
-                        for (let j = ops.pos[1]; j <= ops.pos[3]; j++) {
+            if (ops.cmd !== Consts.ACTION_CMD_NO_OP) {
+                if (this._isMultiCell(ops.value)) {
+                    for (let i = startRowIndex; i <= endRowIndex; i++) {
+                        for (let j = startColIndex; j <= endColIndex; j++) {
                             for (let k = 0; k < ops.value.length; k++) {
                                 if (i === ops.value[k].row && j === ops.value[k].col) {
                                     val = ops.value[k].value;
                                     break;
                                 }
                             }
-                            cellData = { row: i, col: j };
-                            if (ops.type === "cellData") {
+                            cellData = {row: i, col: j};
+                            if (ops.type === Consts.ACTION_TYPE_CELL_DATA) {
                                 cellData.value = val;
-                            } else if (ops.type === "bgColor") {
+                            } else if (ops.type === Consts.ACTION_TYPE_BG_COLOR) {
                                 cellData.color = val;
                             }
                             actionParam.push(cellData);
-                            val = "";
+                            val = '';
                         }
                     }
                 } else {
-                    if (ops.pos[3] === 0) {
-                        cellData = { row: ops.pos[0], col: ops.pos[1] };
-                        if (ops.type === "cellData") {
+                    if (endColIndex === 0) {
+                        cellData = {row: startRowIndex, col: startColIndex};
+                        if (ops.type === Consts.ACTION_TYPE_CELL_DATA) {
                             cellData.value = ops.value;
-                        } else if (ops.type === "bgColor") {
+                        } else if (ops.type === Consts.ACTION_TYPE_BG_COLOR) {
                             cellData.color = ops.value;
                         }
                         actionParam.push(cellData);
                     } else {
-                        for (let i = ops.pos[0]; i <= ops.pos[2]; i++) {
-                            for (let j = ops.pos[1]; j <= ops.pos[3]; j++) {
-                                cellData = { row: i, col: j };
-                                if (ops.type === "cellData") {
+                        for (let i = startRowIndex; i <= endRowIndex; i++) {
+                            for (let j = startColIndex; j <= endColIndex; j++) {
+                                cellData = {row: i, col: j};
+                                if (ops.type === Consts.ACTION_TYPE_CELL_DATA) {
                                     cellData.value = ops.value;
-                                } else if (ops.type === "bgColor") {
+                                } else if (ops.type === Consts.ACTION_TYPE_BG_COLOR) {
                                     cellData.color = ops.value;
                                 }
                                 actionParam.push(cellData);
@@ -63,13 +65,17 @@ export class RemoteEventHandler {
                     }
                 }
 
-                if (ops.type === "cellData") {
-                    actionType = c.UPDATE_VALUE;
-                } else if (ops.type === "bgColor") {
-                    actionType = c.UPDATE_COLOR;
+                if (ops.type === Consts.ACTION_TYPE_CELL_DATA) {
+                    actionType = Consts.UPDATE_VALUE;
+                } else if (ops.type === Consts.ACTION_TYPE_BG_COLOR) {
+                    actionType = Consts.UPDATE_COLOR;
                 }
                 this.controller.doAction(actionType, actionParam, false);
             }
         }
+    }
+
+    _isMultiCell(cell) {
+        return Array.isArray(cell);
     }
 }

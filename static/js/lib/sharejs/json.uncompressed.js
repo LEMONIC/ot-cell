@@ -375,30 +375,34 @@ var WEB = true;
           if (type === 'right') {
             //c.p[common]++;
             /**
+             * [START] OT Transformation Functions
+             */
+
+            /**
              * [insert -> insert]
              * remote insert를 반영하지 않도록 처리
              */
-            if (c.li.cmd === "insert" && otherC.li.cmd === "insert") {
+            if (c.li.cmd === 'insert' && otherC.li.cmd === 'insert') {
               if ((c.li.pos[0] === otherC.li.pos[0]) && (c.li.pos[1] === otherC.li.pos[1])) {
                 console.log('>> insert -> insert');
-                c.li.cmd = "noop";
+                c.li.cmd = 'noop';
               }
             }
             /**
              * [insert -> delete]
              * remote insert를 반영하지 않도록 처리
              */
-            else if (c.li.cmd === "insert" && otherC.li.cmd === "delete") {
+            else if (c.li.cmd === 'insert' && otherC.li.cmd === 'delete') {
               if (otherC.li.pos[3] === 0) {
                 if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
                   console.log('>> insert -> delete');
-                  c.li.cmd = "noop";
+                  c.li.cmd = 'noop';
                 }
               } else {
                 if ((c.li.pos[0] >= otherC.li.pos[0] && c.li.pos[0] <= otherC.li.pos[2]) 
                 && (c.li.pos[1] >= otherC.li.pos[1] && c.li.pos[1] <= otherC.li.pos[3])) {
                   console.log('>> insert -> delete');
-                  c.li.cmd = "noop";
+                  c.li.cmd = 'noop';
                 }
               }
             }
@@ -406,11 +410,11 @@ var WEB = true;
              * [delete -> insert]
              * 겹치는 부분에는 local insert를 유지하면서 그 외의 영역에는 remote delete를 반영하도록 처리
              */
-            else if (c.li.cmd === "delete" && otherC.li.cmd === "insert") {
+            else if (c.li.cmd === 'delete' && otherC.li.cmd === 'insert') {
               if (c.li.pos[3] === 0) {
                 if (otherC.li.pos[0] === c.li.pos[0] && otherC.li.pos[1] === c.li.pos[1]) {
                   console.log('>> delete -> insert');
-                  c.li.cmd = "noop";
+                  c.li.cmd = 'noop';
                 }
               } else {
                 if ((otherC.li.pos[0] >= c.li.pos[0] && otherC.li.pos[0] <= c.li.pos[2]) 
@@ -425,11 +429,11 @@ var WEB = true;
              *  [update -> update]
              * 겹치는 부분에는 local update를 유지하면서 그 외의 영역에는 remote update를 반영하도록 처리
              */
-            else if (c.li.cmd === "update" && otherC.li.cmd === "update") {
+            else if (c.li.cmd === 'update' && otherC.li.cmd === 'update') {
               if (c.li.pos[3] === 0 && otherC.li.pos[3] === 0) {
                 if (c.li.pos[0] === otherC.li.pos[0] && c.li.pos[1] === otherC.li.pos[1]) {
                   console.log('>> update -> update');
-                  c.li.cmd = "noop";
+                  c.li.cmd = 'noop';
                 }
               } else {
                 console.log('>> update -> update');
@@ -456,7 +460,7 @@ var WEB = true;
             }
           } // if (type === 'right') {
           /**
-           * end
+           * [END] OT Transformation Functions
            */
         } else if (otherC.p[common] <= c.p[common]) {
           c.p[common]++;
