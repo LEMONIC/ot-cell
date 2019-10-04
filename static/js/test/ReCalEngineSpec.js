@@ -1,9 +1,9 @@
 import {ReCalEngine} from './../src/ReCalEngine.js';
-import Consts from '../src/Constsants.js';
+import Consts from './../src/Constants.js';
 
 function initCellData(viewData) {
-    viewData = Array.from({length: Consts.MAX_ROW + 1}, () =>
-        Array.from({length: Consts.MAX_COL + 1}, () => ({value: '', color: ''})));
+    viewData = Array.from({length: Consts.MAX_ROW}, () =>
+        Array.from({length: Consts.MAX_COL}, () => ({value: '', color: ''})));
 
     /**
      * [Data Table]
@@ -16,17 +16,17 @@ function initCellData(viewData) {
      * ╚═══╝───┴───┴───┴───┴───┘
      */
 
-    viewData[1][1].value = 1;
-    viewData[1][2].value = 2;
-    viewData[1][3].value = 3;
-    viewData[1][4].value = 4;
-    viewData[1][5].value = 5;
+    viewData[0][0].value = 1;
+    viewData[0][1].value = 2;
+    viewData[0][2].value = 3;
+    viewData[0][3].value = 4;
+    viewData[0][4].value = 5;
 
-    viewData[2][1].value = -17;
-    viewData[2][2].value = 0.5;
-    viewData[2][3].value = 999;
-    viewData[2][4].value = 'STRING';
-    // viewData[2][5].value = isEmpty
+    viewData[1][0].value = -17;
+    viewData[1][1].value = 0.5;
+    viewData[1][2].value = 999;
+    viewData[1][3].value = 'STRING';
+    // viewData[1][4].value = isEmpty
 
     return viewData;
 }
@@ -46,7 +46,7 @@ describe('SUM', function () {
     });
 
     it('=SUM(A1:B1), =SUM(C1:F1)', function () {
-        viewData[1][6].value = '=SUM(A1:B1)';
+        viewData[0][5].value = '=SUM(A1:B1)';
         viewData[10][1].value = '=SUM(C1:F1)';
         r.doReCal(viewData);
         expect(viewData[10][1].value).toBe(15);
