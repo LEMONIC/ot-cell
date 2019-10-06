@@ -33,5 +33,7 @@ server.listen(port, function() {
 ## License & Acknowledgments
 This project is licensed under the MIT License
 * [ShareJS](https://github.com/josephg/ShareJS) - Operational Transform
+* [jasmine](https://github.com/jasmine/jasmine) - JavaScript testing framework
+* [jquery-simplecolorpicker](https://github.com/tkrotoff/jquery-simplecolorpicker) - simple jQuery color picker
 * [Oliviale Ng](https://codepen.io/oliviale/pen/rPjgmB) - CSS Grid: Excel Spreadsheet
 * etc
