@@ -42,7 +42,7 @@ export class RemoteEventHandler {
                         }
                     }
                 } else {
-                    if (endColIndex === 0) {
+                    if (endRowIndex === 0 && endColIndex === 0) {
                         cellData = {row: startRowIndex, col: startColIndex};
                         if (ops.type === Consts.ACTION_TYPE_CELL_DATA) {
                             cellData.value = ops.value;
