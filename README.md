@@ -16,7 +16,14 @@ Mini Excel-like app to allow Real-time collaboration editing via OT(Operational 
 ```
 # npm start
 ```
-http://localhost:5000 (default port)
+http://localhost:5000 (Real-time collaboration editing with different 2-browser)
+
+### Usage
+* Left-Click to Cell : select cell
+* Double-Click to Cell : set cell value
+* Drag to Cells : select cell range
+* Left-Click to ColorPicker : set background-color to selected cells
+* Delete Key : delete value to selected cells
 
 ### To change the port number
 ```javascript
@@ -32,8 +39,11 @@ server.listen(port, function() {
 
 ## License & Acknowledgments
 This project is licensed under the MIT License
+* [Node.js](https://nodejs.org) - JavaScript server side
 * [ShareJS](https://github.com/josephg/ShareJS) - Operational Transform
 * [jasmine](https://github.com/jasmine/jasmine) - JavaScript testing framework
-* [jquery-simplecolorpicker](https://github.com/tkrotoff/jquery-simplecolorpicker) - simple jQuery color picker
+* [jQuery](https://jquery.com) - JavaScript client side
+* [jQueryUI](https://jqueryui.com) - for selectable
+* [jquery-simplecolorpicker](https://github.com/tkrotoff/jquery-simplecolorpicker) - simple color picker
 * [Oliviale Ng](https://codepen.io/oliviale/pen/rPjgmB) - CSS Grid: Excel Spreadsheet
-* etc
+* etc..
